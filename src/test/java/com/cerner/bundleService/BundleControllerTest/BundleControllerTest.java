@@ -17,8 +17,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,14 +63,97 @@ public class BundleControllerTest {
         bundleList.add(bundle1);
         bundleList.add(bundle2);
 
-       when(bundleService.getBundleList()).thenReturn(bundleList);
+        when(bundleService.getBundleList()).thenReturn(bundleList);
 
-      mockMvc.perform(get("/bundleList")
-                         .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/bundleList")
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
     }
 
+    @Test
+    public void addBundle_Test() throws Exception {
+
+        Bundle bundle = new Bundle(15, "20", "scopeName", "bundleAlias",
+                "bundleName", "bundleSummary", "stratificationCriteria",
+                "identificationCriteria", "exclusionCriteria",
+                "measures", "statementGroupId", "measureUid",
+                "Created", "version",
+                "author", LocalDateTime.now(), "Gowthami", null, "");
+
+        String requestBody =
+                "{\"scopeId\":\"20\"," +
+                        "\"scopeName\":\"scopeName\"," +
+                        "\"bundleAlias\":\"bundleAlias\"," +
+                        "\"bundleName\":\"bundleName\"," +
+                        "\"bundleSummary\":\"bundleSummary\"," +
+                        "\"stratificationCriteria\":\"stratificationCriteria\"," +
+                        "\"identificationCriteria\":\"identificationCriteria\"," +
+                        "\"exclusionCriteria\":\"exclusionCriteria\"," +
+                        "\"measures\":\"measures\"," +
+                        "\"measureUid\":\"measureUid\"," +
+                        "\"statementGroupUid\":\"statementGroupUid\"," +
+                        "\"author\":\"author\"," +
+                        "\"version\":\"version\"," +
+                        "\"createdBy\":\"Gowthami\"}";
+
+        System.out.println("requestBody ::" + requestBody);
+        when(bundleService.addBundle(bundle)).thenReturn(bundle);
+
+        mockMvc.perform(post("/addBundle")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateBundle_Test() throws Exception {
+
+        Bundle bundle = new Bundle(15, "20", "scopeName", "bundleAlias",
+                "bundleName", "bundleSummary", "stratificationCriteria",
+                "identificationCriteria", "exclusionCriteria",
+                "measures", "statementGroupId", "measureUid",
+                "Created", "version",
+                "author", LocalDateTime.now(), "Gowthami", null, "");
+
+        String requestBody =
+                "{\"bundleId\":\"2\",\"" +
+                        "\"scopeId\":\"20\"," +
+                        "\"scopeName\":\"scopeName\"," +
+                        "\"bundleAlias\":\"bundleAlias\"," +
+                        "\"bundleName\":\"bundleName\"," +
+                        "\"bundleSummary\":\"bundleSummary\"," +
+                        "\"stratificationCriteria\":\"stratificationCriteria\"," +
+                        "\"identificationCriteria\":\"identificationCriteria\"," +
+                        "\"exclusionCriteria\":\"exclusionCriteria\"," +
+                        "\"measures\":\"measures\"," +
+                        "\"measureUid\":\"measureUid\"," +
+                        "\"statementGroupUid\":\"statementGroupUid\"," +
+                        "\"author\":\"author\"," +
+                        "\"version\":\"version\"," +
+                        "\"createdBy\":\"Gowthami\"}";
+
+        doNothing().when(bundleService).updateBundle(bundle);
+
+        mockMvc.perform(put("/updateBundle")
+                        .param("bundleId","2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteBundle_Test() throws Exception {
+
+        doNothing().when(bundleService).deleteBundle(15);
+
+        mockMvc.perform(get("/getBundleById")
+                        .param("bundleId","15")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 
 }
