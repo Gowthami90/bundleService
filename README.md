@@ -2,28 +2,29 @@
 Assignment for Cerner
 
 POST : addBundle
-<img width="1313" alt="Screenshot 2022-09-22 at 4 18 11 PM" src="https://user-images.githubusercontent.com/81308301/191732678-526c2056-5502-4548-bdb4-1c4caea72261.png">
+<img width="1588" alt="Screenshot 2022-09-28 at 5 54 02 PM" src="https://user-images.githubusercontent.com/81308301/192779843-de8cdfc3-a142-4c65-b1da-586d0507d4c8.png">
+
 
 
 GET: bundleList
-<img width="1292" alt="Screenshot 2022-09-22 at 4 18 55 PM" src="https://user-images.githubusercontent.com/81308301/191733134-cc69c868-e070-42a4-81b2-cbbdaa173db7.png">
+
+<img width="1579" alt="Screenshot 2022-09-28 at 5 56 15 PM" src="https://user-images.githubusercontent.com/81308301/192779868-ff21bc7c-fb72-4693-b038-a8c1dbb94ce1.png">
 
 GET: getBundleByBundleId
-<img width="1302" alt="Screenshot 2022-09-22 at 4 19 56 PM" src="https://user-images.githubusercontent.com/81308301/191733518-578f3cef-1f60-4c6b-9e4c-b48519b87215.png">
+<img width="1580" alt="Screenshot 2022-09-28 at 5 58 03 PM" src="https://user-images.githubusercontent.com/81308301/192779892-4be329b8-1e72-464b-8e47-dafb70c48079.png">
+
 
 DELETE: deleteBundleByBundleId:
-<img width="1304" alt="Screenshot 2022-09-22 at 4 20 50 PM" src="https://user-images.githubusercontent.com/81308301/191733676-3e943606-fb51-4400-b60c-78be9252e1b6.png">
+<img width="1577" alt="Screenshot 2022-09-28 at 6 02 54 PM" src="https://user-images.githubusercontent.com/81308301/192780102-a39bfb24-94b7-4738-9058-f81fd74a75dc.png">
+
 
 PUT: updateBundleById:
-<img width="1294" alt="Screenshot 2022-09-22 at 4 21 35 PM" src="https://user-images.githubusercontent.com/81308301/191733859-257600a5-a3bd-49d2-9ccd-df8eb14dfc11.png">
+
+<img width="1026" alt="Screenshot 2022-09-28 at 6 25 24 PM" src="https://user-images.githubusercontent.com/81308301/192784024-d1d67355-abf9-49a1-8964-af9d4162aa63.png">
+
 
 GET: PaginationAndSorting:
-<img width="1291" alt="Screenshot 2022-09-22 at 4 22 41 PM" src="https://user-images.githubusercontent.com/81308301/191733961-db6d062e-070a-40cc-949a-a7655022c369.png">
 
-POST: implemented validations
-
-<img width="1296" alt="Screenshot 2022-09-22 at 4 55 00 PM" src="https://user-images.githubusercontent.com/81308301/191735016-eb18ed01-815f-49f7-b391-4306dfd53437.png">
+<img width="1564" alt="Screenshot 2022-09-28 at 5 59 55 PM" src="https://user-images.githubusercontent.com/81308301/192780035-1919105d-2241-4552-838b-992cce42acb7.png">
 
 
-GET: implemented Exceptionhandling
-<img width="1265" alt="Screenshot 2022-09-22 at 4 56 39 PM" src="https://user-images.githubusercontent.com/81308301/191735246-f51d46f4-84ed-4d7c-9c0a-7ac1c2856592.png">
