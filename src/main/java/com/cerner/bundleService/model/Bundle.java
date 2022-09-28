@@ -1,13 +1,22 @@
 package com.cerner.bundleService.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -15,10 +24,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Table(name = "bundle_service")
+@TypeDef(name="json", typeClass = JsonStringType.class)
 public class Bundle {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int bundleId;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String bundleId;
     @NotNull
     private String scopeId;
     @NotNull
@@ -27,7 +39,11 @@ public class Bundle {
     private String bundleName;
     private String bundleSummary;
     private String stratificationCriteria;
-    private String identificationCriteria;   // JSON
+    @Type(type="json")
+    @Column(columnDefinition = "json")
+    private String identificationCriteria;
+    @Type(type="json")
+    @Column(columnDefinition = "json")
     private String exclusionCriteria;
     private String measures;
     private String statementGroupUid;
@@ -36,9 +52,9 @@ public class Bundle {
     @NotNull
     private String version;
     private String author;
-    private LocalDateTime createdAt;  // date time
+    private LocalDateTime createdAt;
     @NotNull
     private String createdBy;
-    private LocalDateTime updatedAt;    // date time
+    private LocalDateTime updatedAt;
     private String updatedBy;
 }

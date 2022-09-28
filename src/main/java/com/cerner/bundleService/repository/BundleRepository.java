@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface BundleRepository extends JpaRepository<Bundle, Integer>{
-    public Optional<Object> getBundleByBundleId(int bundleId);
+public interface BundleRepository extends JpaRepository<Bundle, String>{
+    public Optional<Object> getBundleByBundleId(String bundleId);
 }

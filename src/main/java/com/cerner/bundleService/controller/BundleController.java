@@ -25,14 +25,14 @@ public class BundleController {
     @Autowired
     BundleRepository bundleRepository;
 
-    @GetMapping("/getBundleById")
-    public ResponseEntity<Bundle> getBundleById(@RequestParam int bundleId){
+    @GetMapping("/bundles/{bundleId}")
+    public ResponseEntity<Bundle> getBundleById(@PathVariable String bundleId){
         LOGGER.info("Get bundle with particular Id " +bundleId);
-        Bundle bundle =  bundleService.getBundleById(bundleId);
+        Bundle bundle = (Bundle) bundleService.getBundleById(bundleId);
         return new ResponseEntity<>(bundle, HttpStatus.OK);
     }
 
-    @GetMapping("/bundleList")
+    @GetMapping("/bundle")
     public BundleResponse getBundleList(){
         BundleResponse bundleResponse;
         try {
@@ -47,7 +47,7 @@ public class BundleController {
         return bundleResponse;
     }
 
-    @PostMapping("/addBundle")
+    @PostMapping("/bundles")
     public Bundle addBundle(@Valid @RequestBody Bundle bundle)  {
         try {
             return bundleService.addBundle(bundle);
@@ -57,30 +57,18 @@ public class BundleController {
         return bundle;
     }
 
-    @PutMapping("/updateBundle/{bundleId}")
-    public String updateBundle(@RequestBody Bundle bundle, @PathVariable int bundleId) {
+    @PutMapping("/bundles/{bundleId}")
+    public Bundle updateBundle(@RequestBody Bundle bundle, @PathVariable String bundleId) {
         bundleService.updateBundle(bundle);
-        return "Updated Successfully";
+        return bundle;
     }
 
-    @DeleteMapping("/deleteBundle/{bundleId}")
-    public String delete(@PathVariable int bundleId){
+    @DeleteMapping("/bundles/{bundleId}")
+    public String delete(@PathVariable String bundleId){
         bundleService.deleteBundle(bundleId);
         return "Record deleted Successfully";
     }
-    @GetMapping("/sortingBundle/{field}")
-    public APIResponse<List<Bundle>> getBundlesWithSort(@PathVariable String field){
-        List<Bundle> allBundles = bundleService.findBundleWithSorting(field);
 
-        return new APIResponse<>(allBundles.size(), allBundles);
-    }
-
-    @GetMapping("/pagination/{offset}/{pageSize}")
-    public APIResponse<Page<Bundle>> getBundlesWithPagination(@PathVariable int offset, @PathVariable int pageSize){
-        Page<Bundle> bundlesWithPagination = bundleService.findBundleWithPagination(offset, pageSize);
-
-        return new APIResponse<>(bundlesWithPagination.getSize(), bundlesWithPagination);
-    }
 
     @GetMapping("/paginationAndSort/{offset}/{pageSize}/{field}")
     public APIResponse<Page<Bundle>> getBundlesWithPaginationAndSort(@PathVariable int offset, @PathVariable int pageSize, @PathVariable String field){

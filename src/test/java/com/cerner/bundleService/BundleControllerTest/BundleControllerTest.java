@@ -1,6 +1,7 @@
 package com.cerner.bundleService.BundleControllerTest;
 
 
+import com.cerner.bundleService.controller.BundleController;
 import com.cerner.bundleService.model.Bundle;
 import com.cerner.bundleService.service.BundleService;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -27,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BundleControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
+    @Autowired
+    private BundleController bundleController;
 
     @MockBean
     BundleService bundleService;
@@ -41,10 +45,10 @@ public class BundleControllerTest {
     @Test
     public void getBundleById_Test() throws Exception {
 
-       Bundle bundle = new Bundle(15, "20","scopeName", "bundleAlias","bundleName","bundleSummary","stratificationCriteria","identificationCriteria","exclusionCriteria","measures","statementGroupId","measureUid","status","version",
+       Bundle bundle = new Bundle("eae4bba5-3aa2-4a54-a4fa-296a56878f65", "20","scopeName", "bundleAlias","bundleName","bundleSummary","stratificationCriteria","identificationCriteria","exclusionCriteria","measures","statementGroupId","measureUid","status","version",
                 "author", LocalDateTime.now(),"createdBy", LocalDateTime.now(), "updatedBy");
 
-       when(bundleService.getBundleById(15)).thenReturn(bundle);
+       when(bundleService.getBundleById("eae4bba5-3aa2-4a54-a4fa-296a56878f65")).thenReturn(bundle);
 
        mockMvc.perform(get("/getBundleById")
                        .param("bundleId","15")
@@ -55,9 +59,9 @@ public class BundleControllerTest {
 
     @Test
     public void bundlelist() throws Exception {
-        Bundle bundle1 = new Bundle(1, "101","scopeName", "bundleAlias","bundleName","bundleSummary","stratificationCriteria","identificationCriteria","exclusionCriteria","measures","statementGroupId","measureUid","status","version",
+        Bundle bundle1 = new Bundle("22c01569-e8fe-4b28-84dd-3fdbe31259c7", "101","scopeName", "bundleAlias","bundleName","bundleSummary","stratificationCriteria","identificationCriteria","exclusionCriteria","measures","statementGroupId","measureUid","status","version",
            "author", LocalDateTime.now(),"createdBy", LocalDateTime.now(), "updatedBy");
-        Bundle bundle2 = new Bundle(2, "101","scopeName", "bundleAlias","bundleName","bundleSummary","stratificationCriteria","identificationCriteria","exclusionCriteria","measures","statementGroupId","measureUid","status","version",
+        Bundle bundle2 = new Bundle("22c01569-e8fe-4b28-84dd-3fdbe31259c8", "101","scopeName", "bundleAlias","bundleName","bundleSummary","stratificationCriteria","identificationCriteria","exclusionCriteria","measures","statementGroupId","measureUid","status","version",
                 "author", LocalDateTime.now(),"createdBy", LocalDateTime.now(), "updatedBy");
         List<Bundle> bundleList = new ArrayList<>();
         bundleList.add(bundle1);
@@ -65,7 +69,7 @@ public class BundleControllerTest {
 
         when(bundleService.getBundleList()).thenReturn(bundleList);
 
-        mockMvc.perform(get("/bundleList")
+        mockMvc.perform(get("/bundle")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -75,7 +79,7 @@ public class BundleControllerTest {
     @Test
     public void addBundle_Test() throws Exception {
 
-        Bundle bundle = new Bundle(15, "20", "scopeName", "bundleAlias",
+        Bundle bundle = new Bundle("22c01569-e8fe-4b28-84dd-3fdbe31259c7", "20", "scopeName", "bundleAlias",
                 "bundleName", "bundleSummary", "stratificationCriteria",
                 "identificationCriteria", "exclusionCriteria",
                 "measures", "statementGroupId", "measureUid",
@@ -83,7 +87,7 @@ public class BundleControllerTest {
                 "author", LocalDateTime.now(), "Gowthami", null, "");
 
         String requestBody =
-                "{\"scopeId\":\"20\"," +
+                "{\"scopeId\":\"22c01569-e8fe-4b28-84dd-3fdbe31259c7\"," +
                         "\"scopeName\":\"scopeName\"," +
                         "\"bundleAlias\":\"bundleAlias\"," +
                         "\"bundleName\":\"bundleName\"," +
@@ -98,10 +102,9 @@ public class BundleControllerTest {
                         "\"version\":\"version\"," +
                         "\"createdBy\":\"Gowthami\"}";
 
-        System.out.println("requestBody ::" + requestBody);
         when(bundleService.addBundle(bundle)).thenReturn(bundle);
 
-        mockMvc.perform(post("/addBundle")
+        mockMvc.perform(post("/bundles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
 
@@ -111,15 +114,25 @@ public class BundleControllerTest {
     @Test
     public void updateBundle_Test() throws Exception {
 
-        Bundle bundle = new Bundle(15, "20", "scopeName", "bundleAlias",
+        Bundle bundle = new Bundle("22c01569-e8fe-4b28-84dd-3fdbe31259c7", "20", "scopeName", "bundleAlias",
                 "bundleName", "bundleSummary", "stratificationCriteria",
                 "identificationCriteria", "exclusionCriteria",
                 "measures", "statementGroupId", "measureUid",
                 "Created", "version",
                 "author", LocalDateTime.now(), "Gowthami", null, "");
 
+        Bundle updateBundle = new Bundle("22c01569-e8fe-4b28-84dd-3fdbe31259c7", "20", "scopeNameUpdated", "bundleAlias",
+                "bundleName", "bundleSummary", "stratificationCriteria",
+                "identificationCriteria", "exclusionCriteria",
+                "measures", "statementGroupId", "measureUid",
+                "Created", "version",
+                "author", LocalDateTime.now(), "Gowthami", null, "");
+       // when(bundleRepository.findById(bundle.getBundleId())).thenReturn(Optional.of(bundle));
+        when(bundleService.updateBundle(updateBundle)).thenReturn(updateBundle);
+       // Bundle updatedBundle =bundleController.updateBundle(updateBundle,bundle.getBundleId());
+
         String requestBody =
-                "{\"bundleId\":\"2\",\"" +
+                "{\"bundleId\":\"22c01569-e8fe-4b28-84dd-3fdbe31259c7\",\"" +
                         "\"scopeId\":\"20\"," +
                         "\"scopeName\":\"scopeName\"," +
                         "\"bundleAlias\":\"bundleAlias\"," +
@@ -137,8 +150,8 @@ public class BundleControllerTest {
 
         doNothing().when(bundleService).updateBundle(bundle);
 
-        mockMvc.perform(put("/updateBundle")
-                        .param("bundleId","2")
+        mockMvc.perform(put("/bundles")
+                        .param("bundleId","22c01569-e8fe-4b28-84dd-3fdbe31259c7")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
 
@@ -148,10 +161,10 @@ public class BundleControllerTest {
     @Test
     public void deleteBundle_Test() throws Exception {
 
-        doNothing().when(bundleService).deleteBundle(15);
+        doNothing().when(bundleService).deleteBundle("eae4bba5-3aa2-4a54-a4fa-296a56878f65");
 
-        mockMvc.perform(get("/getBundleById")
-                        .param("bundleId","15")
+        mockMvc.perform(delete("/bundles")
+                        .param("bundleId","eae4bba5-3aa2-4a54-a4fa-296a56878f65")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
