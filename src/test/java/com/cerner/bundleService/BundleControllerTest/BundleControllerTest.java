@@ -11,19 +11,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest
 public class BundleControllerTest {
@@ -50,11 +54,12 @@ public class BundleControllerTest {
 
        when(bundleService.getBundleById("eae4bba5-3aa2-4a54-a4fa-296a56878f65")).thenReturn(bundle);
 
-       mockMvc.perform(get("/getBundleById")
-                       .param("bundleId","15")
-                       .accept(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk())
-               .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        ResultActions response = mockMvc.perform(get("/bundles/{bundleId}", bundle.getBundleId()));
+
+                 response.andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
     }
 
     @Test
@@ -119,7 +124,7 @@ public class BundleControllerTest {
                 "identificationCriteria", "exclusionCriteria",
                 "measures", "statementGroupId", "measureUid",
                 "Created", "version",
-                "author", LocalDateTime.now(), "Gowthami", null, "");
+                "author", LocalDateTime.now(), "Gowthami", LocalDateTime.now(), "");
 
         Bundle updateBundle = new Bundle("22c01569-e8fe-4b28-84dd-3fdbe31259c7", "20", "scopeNameUpdated", "bundleAlias",
                 "bundleName", "bundleSummary", "stratificationCriteria",
@@ -127,46 +132,38 @@ public class BundleControllerTest {
                 "measures", "statementGroupId", "measureUid",
                 "Created", "version",
                 "author", LocalDateTime.now(), "Gowthami", null, "");
-       // when(bundleRepository.findById(bundle.getBundleId())).thenReturn(Optional.of(bundle));
-        when(bundleService.updateBundle(updateBundle)).thenReturn(updateBundle);
-       // Bundle updatedBundle =bundleController.updateBundle(updateBundle,bundle.getBundleId());
+        when(bundleService.getBundleById(bundle.getBundleId())).thenReturn(bundle);
+       // when(bundleService.updateBundle(updateBundle)).thenReturn(updateBundle);
+        Bundle updatedBundle =bundleController.updateBundle(updateBundle,updateBundle.getBundleId());
 
-        String requestBody =
-                "{\"bundleId\":\"22c01569-e8fe-4b28-84dd-3fdbe31259c7\",\"" +
-                        "\"scopeId\":\"20\"," +
-                        "\"scopeName\":\"scopeName\"," +
-                        "\"bundleAlias\":\"bundleAlias\"," +
-                        "\"bundleName\":\"bundleName\"," +
-                        "\"bundleSummary\":\"bundleSummary\"," +
-                        "\"stratificationCriteria\":\"stratificationCriteria\"," +
-                        "\"identificationCriteria\":\"identificationCriteria\"," +
-                        "\"exclusionCriteria\":\"exclusionCriteria\"," +
-                        "\"measures\":\"measures\"," +
-                        "\"measureUid\":\"measureUid\"," +
-                        "\"statementGroupUid\":\"statementGroupUid\"," +
-                        "\"author\":\"author\"," +
-                        "\"version\":\"version\"," +
-                        "\"createdBy\":\"Gowthami\"}";
 
-        doNothing().when(bundleService).updateBundle(bundle);
+        // when -  action or the behaviour that we are going test
+        ResultActions response = mockMvc.perform(put("/bundles/{bundleId}", updateBundle.getBundleId()));
 
-        mockMvc.perform(put("/bundles")
-                        .param("bundleId","22c01569-e8fe-4b28-84dd-3fdbe31259c7")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
+                response.andExpect(status().isOk())
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-                .andExpect(status().isOk());
+
+
+
     }
 
     @Test
     public void deleteBundle_Test() throws Exception {
 
-        doNothing().when(bundleService).deleteBundle("eae4bba5-3aa2-4a54-a4fa-296a56878f65");
+        Bundle bundle = new Bundle("22c01569-e8fe-4b28-84dd-3fdbe31259c7", "20", "scopeName", "bundleAlias",
+                "bundleName", "bundleSummary", "stratificationCriteria",
+                "identificationCriteria", "exclusionCriteria",
+                "measures", "statementGroupId", "measureUid",
+                "Created", "version",
+                "author", LocalDateTime.now(), "Gowthami", LocalDateTime.now(), "gowtham");
 
-        mockMvc.perform(delete("/bundles")
-                        .param("bundleId","eae4bba5-3aa2-4a54-a4fa-296a56878f65")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        doNothing().when(bundleService).deleteBundle("22c01569-e8fe-4b28-84dd-3fdbe31259c7");
+
+        ResultActions response =
+                mockMvc.perform(delete("/bundles/{bundleId}", bundle.getBundleId()));
+
+        response.andExpect(status().isOk());
     }
 
 }

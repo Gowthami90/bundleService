@@ -3,23 +3,18 @@ package com.cerner.bundleService.BundleServiceTest;
 import com.cerner.bundleService.model.Bundle;
 import com.cerner.bundleService.repository.BundleRepository;
 import com.cerner.bundleService.service.BundleService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -48,7 +43,7 @@ public class BundleServiceTest {
     }
 
     @Test
-    public void postBundle_Test() {
+    public void postBundle_Test() throws JsonProcessingException {
         Bundle bundle = new Bundle("22c01569-e8fe-4b28-84dd-3fdbe31259c7", "101", "scopeName", "bundleAlias", "bundleName", "bundleSummary", "stratificationCriteria", "identificationCriteria", "exclusionCriteria", "measures", "statementGroupId", "measureUid", "status", "version",
                 "author", LocalDateTime.now(), "createdBy", LocalDateTime.now(), "updatedBy");
 
@@ -89,31 +84,7 @@ public class BundleServiceTest {
         assertThat(updateBundle.getBundleId()).isEqualTo(updatedBundle.getBundleId());
         assertThat(updateBundle.getScopeName()).isEqualTo(updatedBundle.getScopeName());
 
-
     }
-
-    @Test
-    void getPaginationAndSortingBundleTest() {
-
-        Bundle bundle1 = new Bundle("22c01569-e8fe-4b28-84dd-3fdbe31259c7", "101", "scopeName", "bundleAlias", "bundleName", "bundleSummary", "stratificationCriteria", "identificationCriteria", "exclusionCriteria", "measures", "statementGroupId", "measureUid", "status", "version",
-                "author", LocalDateTime.now(), "createdBy", LocalDateTime.now(), "updatedBy");
-        Bundle bundle2 = new Bundle("22c01569-e8fe-4b28-84dd-3fdbe31259c7", "102", "scopeName", "bundleAlias", "bundleName", "bundleSummary", "stratificationCriteria", "identificationCriteria", "exclusionCriteria", "measures", "statementGroupId", "measureUid", "status", "version",
-                "author", LocalDateTime.now(), "createdBy", LocalDateTime.now(), "updatedBy");
-       /* List<Bundle> bundleList = new ArrayList<>();
-        bundleList.add(bundle1);/bundleList.add(bundle2);
-
-
-       Pageable paging = PageRequest.of(0, 2, Sort.by("scopeId"));
-      Page<Bundle> pro= Mockito.mock(Page.class);
-      Mockito.when(appRepoitory.findProductByMerchantId(Mockito.anyString(), Mockito.any())).thenReturn(pro);*/
-
-        when(bundleRepository.findAll(PageRequest.of(0, 15).withSort(Sort.by("scopeId")))).thenReturn((Page<Bundle>) bundle2);
-        Bundle expectedBundle = (Bundle) bundleService.findBundleWithPaginationAndSorting(0, 10, "scopeId");
-        assertThat(expectedBundle).isEqualTo(bundle2);
-    }
-
-
-
 }
 
 
