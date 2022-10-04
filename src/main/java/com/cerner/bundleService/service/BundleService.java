@@ -2,11 +2,11 @@ package com.cerner.bundleService.service;
 
 import com.cerner.bundleService.exception.BundleExceptionHandler;
 import com.cerner.bundleService.model.Bundle;
-import com.cerner.bundleService.model.StatementGroup;
+
+import com.cerner.bundleService.model.IdentificationCriteria;
 import com.cerner.bundleService.model.Status;
 import com.cerner.bundleService.repository.BundleListRepository;
 import com.cerner.bundleService.repository.BundleRepository;
-import com.cerner.bundleService.repository.StatementGroupRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +29,9 @@ public class BundleService {
     BundleRepository bundleRepository;
 
     @Autowired
-    StatementGroupRepository statementGroupRepository;
-    @Autowired
     BundleListRepository bundleListRepository;
+    @Autowired
+    IdentificationCriteria identificationCriteria;
 
     public Bundle getBundleById(String bundleId) throws NoSuchElementException{
         Optional<Object> bundle = bundleRepository.getBundleByBundleId(bundleId);
@@ -45,7 +45,7 @@ public class BundleService {
 
         return bundleRepository.findAll();
     }
-    public Bundle addBundle(Bundle bundle) throws JsonProcessingException {
+    /*public Bundle addBundle(Bundle bundle) throws JsonProcessingException {
         //Fetch statement data
         if(!bundle.getStatementGroupUid().isEmpty()){
             StatementGroup statementGroup = statementGroupRepository.findById(bundle.getStatementGroupUid()).get();
@@ -55,7 +55,7 @@ public class BundleService {
         }
         bundle.setCreatedAt(LocalDateTime.now());
        return (bundleRepository.save(bundle));
-    }
+    }*/
     public Bundle updateBundle(Bundle bundle) {
         bundle.setUpdatedAt(LocalDateTime.now());
         bundle.setStatus(Status.PUBLISHED.getStatus());
@@ -83,5 +83,10 @@ public class BundleService {
         } else {
             return new ArrayList<Bundle>();
         }
+    }
+
+    public Bundle addBundle(Bundle bundle){
+        bundle.setCreatedAt(LocalDateTime.now());
+        return (bundleRepository.save(bundle));
     }
 }

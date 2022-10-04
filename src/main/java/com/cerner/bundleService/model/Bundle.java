@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -33,21 +34,21 @@ public class Bundle {
     private String bundleName;
     private String bundleSummary;
     private String stratificationCriteria;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "identification_criteria_id")
+    private IdentificationCriteria identificationCriteria;
 
-    @Type(type="json")
-    @Column(columnDefinition = "json")
-    private String identificationCriteria;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "exclusion_criteria_id")
+    private ExclusionCriteria exclusionCriteria;
 
-    @Type(type="json")
-    @Column(columnDefinition = "json")
-    private String exclusionCriteria;
 
     private String measures;
     private String statementGroupUid;
     private String measureUid;
     private String status;
-    @NotNull
-    private String version;
+  @Version
+    private Long version;
     private String author;
     private LocalDateTime createdAt;
     @NotNull
